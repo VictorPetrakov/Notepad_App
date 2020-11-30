@@ -5,6 +5,24 @@ import com.victorp.service.ChoiceService;
 import java.util.Scanner;
 
 public class ChoiceServiceImpl implements ChoiceService {
+    private static ChoiceService instance;
+
+    public static ChoiceService getInstance() {
+
+        if (instance == null) {
+            synchronized (ChoiceService.class) {
+                if (instance == null) {
+                    instance = new ChoiceServiceImpl();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private ChoiceServiceImpl() {
+    }
+
+
     @Override
     public int choiceYes_NO(int choice) throws Exception {
         Scanner in = new Scanner(System.in);

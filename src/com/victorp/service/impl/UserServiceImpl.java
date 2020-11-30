@@ -14,8 +14,25 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserServiceImpl implements UserService {
-    UserDAO userDAO = new UserDAOImpl();
-    ChoiceService choiceService = new ChoiceServiceImpl();
+    private static UserService instance;
+
+    public static UserService getInstance() {
+
+        if (instance == null) {
+            synchronized (UserService.class) {
+                if (instance == null) {
+                    instance = new UserServiceImpl();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private UserServiceImpl() {
+    }
+
+    private final UserDAO userDAO = UserDAOImpl.getInstance();
+    private final ChoiceService choiceService = ChoiceServiceImpl.getInstance();
 
     @Override
     public void create() throws Exception {

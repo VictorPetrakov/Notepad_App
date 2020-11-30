@@ -4,7 +4,7 @@ import com.victorp.service.MenuService;
 import com.victorp.service.impl.MenuServiceImpl;
 
 public class ConsolMenu {
-    private MenuService consoleMenuAction = new MenuServiceImpl();
+    private final MenuService consoleMenuAction = MenuServiceImpl.getInstance();
 
     public void startConsoleMenu() throws Exception {
         int choice;

@@ -8,6 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
+
+    private static UserDAO userDAO;
+
+    public UserDAOImpl() {
+    }
+
+    public static UserDAO getInstance() {
+        if (userDAO == null) {
+            synchronized (UserDAOImpl.class) {
+                if (userDAO == null) {
+                    userDAO = new UserDAOImpl();
+                }
+            }
+        }
+        return userDAO;
+    }
+
+
     @Override
     public void write(List<User> users) throws Exception {
 
@@ -55,13 +73,6 @@ public class UserDAOImpl implements UserDAO {
             }
             return users;
         }
-    }
-
-    @Override
-    public void edit(String userLastName) throws Exception {
-        User user = findByLastName(userLastName);
-
-
     }
 
     @Override

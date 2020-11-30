@@ -1,13 +1,33 @@
 package com.victorp.service.impl;
 
+import com.victorp.service.ChoiceService;
 import com.victorp.service.MenuService;
 import com.victorp.service.UserService;
 
 import java.util.Scanner;
 
 public class MenuServiceImpl implements MenuService {
+    private static MenuService instance;
 
+    public static MenuService getInstance() {
+
+        if (instance == null) {
+            synchronized (ChoiceService.class) {
+                if (instance == null) {
+                    instance = new MenuServiceImpl();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private MenuServiceImpl() {
+    }
+
+
+    private final UserService userService = UserServiceImpl.getInstance();
     private Scanner scanner = new Scanner(System.in);
+
     @Override
     public void printOptions() {
         String menuText = "Available operations:\n" +
@@ -41,11 +61,10 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public boolean processingOperation(int choice) {
-        UserService service = new UserServiceImpl();
         switch (choice){
             case 1:
                 try {
-                    service.create();
+                    userService.create();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -55,7 +74,7 @@ public class MenuServiceImpl implements MenuService {
                 System.out.println("Enter last name: ");
                 String strName = scanner.nextLine();
                 try {
-                    service.edit(strName);
+                    userService.edit(strName);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -82,7 +101,7 @@ public class MenuServiceImpl implements MenuService {
                 switch (c) {
                     case 1:
                         try {
-                            service.delete(lastName);
+                            userService.delete(lastName);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -97,7 +116,7 @@ public class MenuServiceImpl implements MenuService {
                 System.out.println("Enter LastName user: ");
                 String str = scanner.nextLine();
                 try {
-                    service.view(str);
+                    userService.view(str);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -105,7 +124,7 @@ public class MenuServiceImpl implements MenuService {
                 break;
             case 5:
                try{
-                   service.viewAll();
+                   userService.viewAll();
                }catch (Exception e){
                    System.out.println("Exception ");
                }
