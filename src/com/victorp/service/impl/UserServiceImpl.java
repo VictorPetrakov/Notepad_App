@@ -3,6 +3,7 @@ package com.victorp.service.impl;
 import com.victorp.dao.UserDAO;
 import com.victorp.dao.impl.UserDAOImpl;
 import com.victorp.entity.User;
+import com.victorp.service.ChoiceService;
 import com.victorp.service.UserService;
 import com.victorp.validator.Validator;
 import com.victorp.validator.impl.ValidatorImpl;
@@ -14,6 +15,7 @@ import java.util.Scanner;
 
 public class UserServiceImpl implements UserService {
     UserDAO userDAO = new UserDAOImpl();
+    ChoiceService choiceService = new ChoiceServiceImpl();
 
     @Override
     public void create() throws Exception {
@@ -53,19 +55,7 @@ public class UserServiceImpl implements UserService {
                         System.out.println("Enter another phone number? ");
                         System.out.println("Yes-1/No-2");
                         int choice = 0;
-                        while (choice == 0) {
-                            try {
-                                choice = Integer.parseInt(in.nextLine());
-                                if (choice > 2 || choice < 1) {
-                                    System.out.println("You must choice 1-Yes/2-No. Repeat entry.\n");
-                                    System.out.println("Enter another phone number? ");
-                                    System.out.println("Yes-1/No-2");
-                                    choice = 0;
-                                }
-                            } catch (NumberFormatException e) {
-                                System.out.println("Invalid input. Try again.\n");
-                            }
-                        }
+                        choice = choiceService.choiceYes_NO(choice);
                         switch (choice) {
                             case 1:
                                 System.out.println("Enter PhoneNumber: ");
@@ -94,19 +84,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("Enter another role? ");
                 System.out.println("Yes-1/No-2");
                 int choice = 0;
-                while (choice == 0) {
-                    try {
-                        choice = Integer.parseInt(in.nextLine());
-                        if (choice > 2 || choice < 1) {
-                            System.out.println("You must choice 1-Yes/2-No. Repeat entry.\n");
-                            System.out.println("Enter another role? ");
-                            System.out.println("Yes-1/No-2");
-                            choice = 0;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Try again.\n");
-                    }
-                }
+                choice = choiceService.choiceYes_NO(choice);
                 switch (choice) {
                     case 1:
                         System.out.println("Enter role: ");
@@ -135,7 +113,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void edit(String userLastName) throws Exception {
         User userForEdit = view(userLastName);
-        if(userForEdit != null){
+        if (userForEdit != null) {
             List<User> users;
             Validator valid = new ValidatorImpl();
             Scanner in = new Scanner(System.in);
@@ -157,8 +135,8 @@ public class UserServiceImpl implements UserService {
             }
             System.out.println("Edit email: " + userForEdit.getEmail());
             boolean correctEmail = false;
-            String str = in.nextLine();
             while (correctEmail == false) {
+                String str = in.nextLine();
                 if (str.isEmpty()) {
                     userForEdit.setEmail(userForEdit.getEmail());
                     correctEmail = true;
@@ -184,18 +162,7 @@ public class UserServiceImpl implements UserService {
                         System.out.println("You want to edit or add phone number? ");
                         System.out.println("1-edit/2-add");
                         int ch = 0;
-                        while (ch == 0) {
-                            try {
-                                ch = Integer.parseInt(in.nextLine());
-                                if (ch > 2 || ch < 1) {
-                                    System.out.println("You must choice 1-edit/2-add. Repeat entry.\n");
-                                    System.out.println("You want to edit or add phone number? ");
-                                    ch = 0;
-                                }
-                            } catch (NumberFormatException e) {
-                                System.out.println("Invalid input. Try again.\n");
-                            }
-                        }
+                        ch = choiceService.choiceEdit_Add(ch);
                         switch (ch) {
                             case 1:
                                 int count = 0;
@@ -206,18 +173,7 @@ public class UserServiceImpl implements UserService {
                                 }
                                 System.out.println("select the phone number to replace");
                                 int positionOfPhoneNumber = -1;
-                                while (positionOfPhoneNumber == -1) {
-                                    try {
-                                        positionOfPhoneNumber = Integer.parseInt(in.nextLine());
-                                        if (positionOfPhoneNumber > count || positionOfPhoneNumber < 0) {
-                                            System.out.println("You must select the number that is in the list. Repeat entry.\n");
-                                            System.out.println("select the phone number to replace");
-                                            positionOfPhoneNumber = -1;
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("Invalid input. Try again.\n");
-                                    }
-                                }
+                                positionOfPhoneNumber = choiceService.choiceNumberToReplace(positionOfPhoneNumber, count);
                                 phone_number.remove(positionOfPhoneNumber - 1);
                                 phone_number.add(strPhone);
                                 userForEdit.setPhone_numbers(phone_number);
@@ -230,19 +186,7 @@ public class UserServiceImpl implements UserService {
                                     System.out.println("Enter another phone number? ");
                                     System.out.println("Yes-1/No-2");
                                     int choice = 0;
-                                    while (choice == 0) {
-                                        try {
-                                            choice = Integer.parseInt(in.nextLine());
-                                            if (choice > 2 || choice < 1) {
-                                                System.out.println("You must choice 1-Yes/2-No. Repeat entry.\n");
-                                                System.out.println("Enter another phone number? ");
-                                                System.out.println("Yes-1/No-2");
-                                                choice = 0;
-                                            }
-                                        } catch (NumberFormatException e) {
-                                            System.out.println("Invalid input. Try again.\n");
-                                        }
-                                    }
+                                    choice = choiceService.choiceYes_NO(choice);
                                     switch (choice) {
                                         case 1:
                                             System.out.println("Enter PhoneNumber: ");
@@ -277,19 +221,7 @@ public class UserServiceImpl implements UserService {
                     System.out.println("You want to edit or add role? ");
                     System.out.println("1-edit/2-add");
                     int ch = 0;
-                    while (ch == 0) {
-                        try {
-                            ch = Integer.parseInt(in.nextLine());
-                            if (ch > 2 || ch < 1) {
-                                System.out.println("You must choice 1-edit/2-add. Repeat entry.\n");
-                                System.out.println("You want to edit or add role? ");
-                                ch = 0;
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid input. Try again.\n");
-                        }
-                    }
-
+                    ch = choiceService.choiceEdit_Add(ch);
                     switch (ch) {
                         case 1:
                             int count = 0;
@@ -300,22 +232,9 @@ public class UserServiceImpl implements UserService {
                             }
                             System.out.println("select the role to replace");
                             int positionOfRole = -1;
-                            while (positionOfRole == -1) {
-                                try {
-                                    positionOfRole = Integer.parseInt(in.nextLine());
-                                    if (positionOfRole > count || positionOfRole < 0) {
-                                        System.out.println("You must select the number that is in the list. Repeat entry.\n");
-                                        System.out.println("select the role to replace");
-                                        positionOfRole = -1;
-                                    }else{
-                                        roles.remove(positionOfRole - 1);
-                                        roles.add(strRole);
-                                        positionOfRole = 1;
-                                    }
-                                } catch (NumberFormatException e) {
-                                    System.out.println("Invalid input. Try again.\n");
-                                }
-                            }
+                            positionOfRole = choiceService.choiceRoleToReplace(positionOfRole, count);
+                            roles.remove(positionOfRole - 1);
+                            roles.add(strRole);
                             userForEdit.setRoles(roles);
                             role = true;
                             break;
@@ -325,19 +244,7 @@ public class UserServiceImpl implements UserService {
                                 System.out.println("Enter another role? ");
                                 System.out.println("Yes-1/No-2");
                                 int choice = 0;
-                                while (choice == 0) {
-                                    try {
-                                        choice = Integer.parseInt(in.nextLine());
-                                        if (choice > 2 || choice < 1) {
-                                            System.out.println("You must choice 1-Yes/2-No. Repeat entry.\n");
-                                            System.out.println("Enter another role? ");
-                                            System.out.println("Yes-1/No-2");
-                                            choice = 0;
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("Invalid input. Try again.\n");
-                                    }
-                                }
+                                choice = choiceService.choiceYes_NO(choice);
                                 switch (choice) {
                                     case 1:
                                         System.out.println("Enter role: ");
